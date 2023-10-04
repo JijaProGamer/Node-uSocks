@@ -32,8 +32,8 @@ const server = net.createServer((client) => {
             let targetPort;
 
             if (addressType === IPV4_TYPE) {
-                targetHost = request.slice(4, 8).join('.');
-                targetPort = request.readUInt16BE(8);
+                targetHost = request.slice(4, request.length - 4).toString();
+                targetPort = request.readUInt16BE(request.length - 2);
             } else if (addressType === DOMAIN_NAME_TYPE) {
                 const domainLength = request[4];
                 targetHost = request.slice(5, 5 + domainLength).toString();
@@ -46,7 +46,9 @@ const server = net.createServer((client) => {
                 return;
             }
 
-            const target = net.createConnection(targetPort, targetHost, () => {
+            console.log(targetPort, targetHost)
+
+            const target = net.createConnection(targetPort, "86.125.137.217", () => {
                 const response = Buffer.alloc(request.length);
                 request.copy(response);
                 

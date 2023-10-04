@@ -1,10 +1,9 @@
 import axios from "axios"
 import agent from "./uSocks-Agent/index.js"
 
-let Agent = new agent("socks5://127.0.0.1")
+let Agent = new agent("socks5://127.0.0.1:1080")
 
-
-axios.get('https://www.bloxxy.com',
+axios.get('https://www.bloxxy.net',
     {
         httpAgent: Agent,
         httpsAgent: Agent

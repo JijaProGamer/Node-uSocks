@@ -49,6 +49,15 @@ function parseSocksURL(url) {
     return { lookup, proxy };
 }
 
+function padIP(ip) {
+    const octets = ip.split('.');
+    const paddedOctets = octets.map((octet) => {
+      return parseInt(octet, 10).toString().padStart(3, '0');
+    });
+
+    return paddedOctets.join('.');
+  }
+
 export function omit(obj, ...keys) {
     const ret = {};
     for (let key in obj) {
@@ -109,6 +118,7 @@ class uSocksProxyAgent extends Agent {
             if (tlsSocket) tlsSocket.destroy();
         };
 
+        console.log(socksOpts)
         const socket = await createSocksProxyConnection(socksOpts);
 
         if (timeout !== null) {
@@ -148,10 +158,10 @@ function createSocksProxyConnection(socksOpts) {
                         1,
                         0,
                         1,
-                        ...Buffer.from(socksOpts.destination.host).values(),
+                        ...Buffer.from(socksOpts.destination.host),
                         (socksOpts.destination.port >> 8) & 0xff,
                         socksOpts.destination.port & 0xff,
-                    ]);
+                      ]);
 
                     socket.once("data", (data) => {
                         if (data[1] == 0x00) {
